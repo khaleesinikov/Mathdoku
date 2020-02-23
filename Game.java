@@ -2,11 +2,14 @@ import java.io.File;
 
 import javafx.application.Application;
 import javafx.event.*;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class Game extends Application {
@@ -50,13 +53,82 @@ public class Game extends Application {
 					FileParser f = new FileParser(file);
 					f.makeArray();
 					f.fillArray();
-					puzzle = f.getArray();
-					board = new Grid(puzzle);
-					vb.getChildren().add(board);
-					VBox.setVgrow(board, Priority.ALWAYS);
+					if(f.checkIfValid()) {
+						puzzle = f.getArray();
+						try { 
+							board = new Grid(puzzle);
+							vb.getChildren().add(board);
+							VBox.setVgrow(board, Priority.ALWAYS);
+						} catch(Exception ee) {
+							Alert alert = new Alert(AlertType.ERROR);
+							alert.setTitle("Config Failed");
+							alert.setHeaderText("Your config is bad and you should feel bad");
+							alert.setContentText("There was a mistake in your config file that meant the puzzle could not be created");
+							alert.showAndWait();
+						}
+					} else {
+						Alert alert = new Alert(AlertType.ERROR);
+						alert.setTitle("Config Failed");
+						alert.setHeaderText("Your config is bad and you should feel bad");
+						alert.setContentText("There was a mistake in your config file that meant the puzzle could not be created");
+						alert.showAndWait();
+					}
 				}
 			}
-			
+		});
+		
+		m12.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent e) {
+				Label enter = new Label("Enter config text here:");
+				TextArea ta = new TextArea();
+				HBox tex = new HBox(ta);
+				HBox.setHgrow(ta, Priority.ALWAYS);
+				Button conf = new Button("Create puzzle");
+				Pane spacer = new Pane();
+				spacer.setMinSize(10, 1);
+				HBox.setHgrow(spacer, Priority.ALWAYS);
+				HBox inpt = new HBox(enter, spacer, conf);
+				inpt.setPadding(new Insets(0,0,5,0));
+				VBox inpWin = new VBox(inpt, tex);
+				inpWin.setPadding(new Insets(10));
+				VBox.setVgrow(tex, Priority.ALWAYS);
+				Stage newWindow = new Stage();
+				newWindow.setTitle("Text config");
+				Scene textWindow = new Scene(inpWin, 300, 400);
+				newWindow.setScene(textWindow);
+				newWindow.initModality(Modality.APPLICATION_MODAL);
+				newWindow.show();
+				
+				conf.setOnAction(new EventHandler<ActionEvent>() {
+					public void handle(ActionEvent e) {
+				        String text = ta.getText();
+				        TextParser tp = new TextParser(text);
+				        vb.getChildren().remove(board);
+				        if(tp.checkIfValid()) {
+					        puzzle = tp.getPuzzle();
+					        try {
+					        	board = new Grid(puzzle);
+					        	vb.getChildren().add(board);
+								VBox.setVgrow(board, Priority.ALWAYS);
+					        } catch(Exception ee) {
+					        	Alert alert = new Alert(AlertType.ERROR);
+								alert.setTitle("Config Failed");
+								alert.setHeaderText("Your config is bad and you should feel bad");
+								alert.setContentText("There was a mistake in your config text that meant the puzzle could not be created");
+								alert.showAndWait();
+					        }
+							newWindow.close();
+				        } else {
+				        	Alert alert = new Alert(AlertType.ERROR);
+							alert.setTitle("Config Failed");
+							alert.setHeaderText("Your config is bad and you should feel bad");
+							alert.setContentText("There was a mistake in your config text that meant the puzzle could not be created");
+							alert.showAndWait();
+							newWindow.close();
+				        }
+				    }
+				});
+			}
 		});
 		
 		s.setMinHeight(300);
