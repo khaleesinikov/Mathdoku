@@ -20,7 +20,7 @@ public class Cage {
 		this.op = operator;
 		this.tar = target;
 		for(String cell : cells) { //makes list of cells within cage
-			this.cells.add(new Cell(Integer.parseInt(cell)));
+			this.cells.add(new Cell(Integer.parseInt(cell), this.board));
 		}
 		labelCell();
 	}
@@ -68,7 +68,7 @@ public class Cage {
 					top = 0.1;
 				}
 			}
-			BorderStroke b = new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, null, new BorderWidths(top, rit, bot, lef));
+			BorderStroke b = new BorderStroke(Color.SEAGREEN, BorderStrokeStyle.SOLID, null, new BorderWidths(top, rit, bot, lef));
 			cell.setBorder(new Border(b));
 		}
 	}

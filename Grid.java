@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import javafx.geometry.*;
 import javafx.scene.layout.*;
 
@@ -86,6 +85,10 @@ public class Grid extends GridPane {
                 this.hash.put(cell.getID(), cell);
             }
         }
+	}
+	
+	public void checkRows() {
+		ArrayList<Integer> rowPut = new ArrayList<>();
 	}
 	
 	public ArrayList<Cage> getCages() {
