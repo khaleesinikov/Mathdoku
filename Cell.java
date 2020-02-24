@@ -33,14 +33,18 @@ public class Cell extends StackPane {
 	}
 	
 	public void enter(int num) {
-		this.input = num;
 		if(num > 0 && num <= board.acquireWidth()) {
+			if(this.getChildren().contains(l)) {
+				getChildren().remove(l);
+			}
 			this.l = new Label(Integer.toString(num));
 			StackPane.setAlignment(l, Pos.CENTER);
 			getChildren().add(l);
+			this.input = num;
 		} else if(num == 9 && this.getChildren().contains(l)) {
 			getChildren().remove(l);
 		}
+		board.checkWin();
 	}
 	
 	public void select() {

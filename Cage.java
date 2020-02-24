@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Collections;
+
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Border;
@@ -27,6 +29,50 @@ public class Cage {
 	
 	public ArrayList<Cell> getCells() {
 		return cells;
+	}
+	
+	public int getSum() {
+		int counter = 0;
+		for(Cell cell : cells) {
+			counter += cell.getInput();
+		}
+		return counter;
+	}
+	
+	public int getSub() {
+		ArrayList<Integer> subs = new ArrayList<>();
+		for(Cell cell : cells) {
+			subs.add(cell.getInput());
+		}
+		Collections.sort(subs);
+		Collections.reverse(subs);
+		int sum = subs.get(0);
+		for(int i=1; i<subs.size(); i++) {
+			sum = sum - subs.get(i);
+		}
+		return sum;
+	}
+	
+	public int getMul() {
+		int counter = 1;
+		for(Cell cell : cells) {
+			counter = counter*cell.getInput();
+		}
+		return counter;
+	}
+	
+	public int getDiv() {
+		ArrayList<Integer> subs = new ArrayList<>();
+		for(Cell cell : cells) {
+			subs.add(cell.getInput());
+		}
+		Collections.sort(subs);
+		Collections.reverse(subs);
+		int div = subs.get(0);
+		for(int i=1; i<subs.size(); i++) {
+			div = div/subs.get(i);
+		}
+		return div;
 	}
 	
 	public void labelCell() {
@@ -71,6 +117,14 @@ public class Cage {
 			BorderStroke b = new BorderStroke(Color.SEAGREEN, BorderStrokeStyle.SOLID, null, new BorderWidths(top, rit, bot, lef));
 			cell.setBorder(new Border(b));
 		}
+	}
+	
+	public int getTar() {
+		return tar;
+	}
+	
+	public char getOp() {
+		return op;
 	}
 
 }

@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import javafx.geometry.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.*;
 
 public class Grid extends GridPane {
@@ -11,6 +13,7 @@ public class Grid extends GridPane {
 	String[] examplePuzzle = {"11+ 1,7", "2÷ 2,3", "20x 4,10", "6x 5,6,12,18", "3- 8,9", "3÷ 11,17", "240x 13,14,19,20", "6x 15,16", "6x 21,27", "7+ 22,28,29", "30x 23,24", "6x 25,26", "9+ 30,36", "8+ 31,32,33", "2÷ 34,35"};
 	String[] sizeTest = {"3/ 1,2", "2- 3,4", "9+ 5,9,13", "12x 6,10,11", "2- 7,8", "2/ 12,16", "6+ 14,15"};
 	String[] loaded = null;
+	ArrayList<Cell> cellArray = new ArrayList<>();
 	
 	public Grid(String[] puzzle) {
 		makeCages(puzzle);
@@ -36,8 +39,9 @@ public class Grid extends GridPane {
 				Cell cell = hash.get(count);
 				cell.setX(i);
 				cell.setY(j);
-				cell.labelCo();
+				//cell.labelCo();
 				add(cell, j, i);
+				cellArray.add(cell);
 				count++;
 			}
 			ColumnConstraints c = new ColumnConstraints();
@@ -87,8 +91,85 @@ public class Grid extends GridPane {
         }
 	}
 	
-	public void checkRows() {
-		ArrayList<Integer> rowPut = new ArrayList<>();
+	public boolean checkRows() {
+		int target = ((width*(width+1))/2);
+		for(int i=0; i<width; i++) {
+			int calc = 0;
+			for(Cell cell : cellArray) {
+				if(cell.getX() == i) {
+					calc += cell.getInput();
+					//System.out.println("Calc: " + calc + " ID: " + cell.getID());
+				}
+			}
+			if(calc != target) {
+				System.out.println("Rows bad");
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public boolean checkCols() {
+		int target = ((width*(width+1))/2);
+		for(int i=0; i<width; i++) {
+			int calc = 0;
+			for(Cell cell : cellArray) {
+				if(cell.getY() == i) {
+					calc += cell.getInput();
+					//System.out.println(calc);
+				}
+			}
+			if(calc != target) {
+				System.out.println("Columns bad");
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public boolean checkCages() {
+		for(Cage cage : cageList) {
+			if(cage.getOp() == ' ') {
+				System.out.println(cage.getSum());
+				if(!(cage.getTar() == cage.getSum()))
+					break;
+			} else if(cage.getOp() == 'x' || cage.getOp() == '*') {
+				System.out.println(cage.getTar() + "Mul: " + cage.getMul());
+				if(!(cage.getTar() == cage.getMul()))
+					break;
+			} else if(cage.getOp() == '/' || cage.getOp() == '÷') {
+				System.out.println(cage.getTar() + "Div: " + cage.getDiv());
+				if(!(cage.getTar() == cage.getDiv()))
+					break;
+			} else if(cage.getOp() == '-') {
+				System.out.println(cage.getTar() + "Sub: " + cage.getSub());
+				if(!(cage.getTar() == cage.getSub()))
+					break;
+			} else if(cage.getOp() == '+') {
+				System.out.println(cage.getTar() + "Sum: " + cage.getSum());
+				if(!(cage.getTar() == cage.getSum()))
+					break;
+			}
+			System.out.println("Cages good");
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean checkWin() {
+		if(checkRows() && checkCols() && checkCages()) {
+			System.out.println("Win condition met");
+			setMouseTransparent(true);
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setTitle("Success");
+			alert.setHeaderText("You completed the puzzle correctly");
+			alert.setContentText("It's gamer time");
+			alert.showAndWait();
+			return true;
+		} else {
+			System.out.println("Win condition not met");
+			return false;
+		}
 	}
 	
 	public ArrayList<Cage> getCages() {
