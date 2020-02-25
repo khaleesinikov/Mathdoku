@@ -129,6 +129,13 @@ public class Cell extends StackPane {
         chooser.show();
 	}
 	
+	public void clear() {
+		if(this.getChildren().contains(l)) {
+			this.getChildren().remove(l);
+		}
+		input = 0;
+	}
+	
 	public int getID() {
 		return id;
 	}

@@ -1,4 +1,5 @@
 import java.io.File;
+import java.util.Optional;
 
 import javafx.application.Application;
 import javafx.event.*;
@@ -54,6 +55,7 @@ public class Game extends Application {
 					FileParser f = new FileParser(file);
 					f.makeArray();
 					f.fillArray();
+					m24.setSelected(false);
 					if(f.checkIfValid()) {
 						puzzle = f.getArray();
 						try { 
@@ -105,6 +107,7 @@ public class Game extends Application {
 				        String text = ta.getText();
 				        TextParser tp = new TextParser(text);
 				        vb.getChildren().remove(board);
+				        m24.setSelected(false);
 				        if(tp.checkIfValid()) {
 					        puzzle = tp.getPuzzle();
 					        try {
@@ -129,6 +132,22 @@ public class Game extends Application {
 				        }
 				    }
 				});
+			}
+		});
+		
+		m23.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				Alert alert = new Alert(AlertType.CONFIRMATION);
+				alert.setTitle("Clear confirmation");
+				alert.setHeaderText("Are you sure you want to clear the board?");
+				alert.setContentText("Please confirm action to proceed");
+				Optional<ButtonType> result = alert.showAndWait();
+				if (result.get() == ButtonType.OK){
+				    board.clear();
+				    for(Cell cell : board.cellArray) {
+						cell.setBackground(new Background(new BackgroundFill(Color.MINTCREAM, CornerRadii.EMPTY, Insets.EMPTY)));
+					}
+				}
 			}
 		});
 		

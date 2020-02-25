@@ -83,10 +83,20 @@ public class FileParser {
 			String[] test = str.split(",");
 			counter += test.length;
 		}
-		if(Math.floor(Math.sqrt(counter)) == Math.sqrt(counter) && checkIfAdj() && checkIfNumber() && checkIfOp()) {
+		if(Math.floor(Math.sqrt(counter)) == Math.sqrt(counter) && checkIfLine() && checkIfAdj() && checkIfNumber() && checkIfOp()) {
 			return true;
 		} else
 			return false;
+	}
+	
+	public boolean checkIfLine() {
+		for(String str : puzzle) {
+			String[] split = str.split(" ");
+			if(split.length != 2) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	public boolean checkIfAdj() {

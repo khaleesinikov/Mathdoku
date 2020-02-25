@@ -15,12 +15,13 @@ public class Grid extends GridPane {
 	String[] sizeTest = {"3/ 1,2", "2- 3,4", "9+ 5,9,13", "12x 6,10,11", "2- 7,8", "2/ 12,16", "6+ 14,15"};
 	String[] loaded = null;
 	ArrayList<Cell> cellArray = new ArrayList<>();
-	boolean showMist = false;
+	boolean showMist;
 	
 	public Grid(String[] puzzle) {
 		makeCages(puzzle);
 		setAlignment(Pos.CENTER);
 		makeCells();
+		showMist = false;
 		/*int id = 1; //iterates and makes a grid of cells based on width of board
 		for(int y=0; y<width; y++) {
 		    for(int x=0; x<width; x++) {
@@ -91,6 +92,12 @@ public class Grid extends GridPane {
                 this.hash.put(cell.getID(), cell);
             }
         }
+	}
+	
+	public void clear() {
+		for(Cell cell : cellArray) {
+			cell.clear();
+		}
 	}
 	
 	public boolean checkRows() {
@@ -188,11 +195,11 @@ public class Grid extends GridPane {
 								bCell.setBackground(bad);
 							}
 						}
-						System.out.println("Egg1");
+						//System.out.println("Egg1");
 						continue;
 					} else if(cell.getInput() != 0) {
 						checker.add(cell.getInput());
-						System.out.println("Egg2");
+						//System.out.println("Egg2");
 					}
 				}
 			}
