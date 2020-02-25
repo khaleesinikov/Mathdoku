@@ -111,7 +111,7 @@ public class Grid extends GridPane {
 				}
 			}
 			if(calc != target) {
-				System.out.println("Rows bad");
+				//System.out.println("Rows bad");
 				return false;
 			}
 		}
@@ -129,7 +129,7 @@ public class Grid extends GridPane {
 				}
 			}
 			if(calc != target) {
-				System.out.println("Columns bad");
+				//System.out.println("Columns bad");
 				return false;
 			}
 		}
@@ -162,7 +162,7 @@ public class Grid extends GridPane {
 			//System.out.println("Cages good");
 			return true;
 		}
-		System.out.println("Cages bad");
+		//System.out.println("Cages bad");
 		return false;
 	}
 	
