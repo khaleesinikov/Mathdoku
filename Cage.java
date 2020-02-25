@@ -70,6 +70,9 @@ public class Cage {
 		Collections.reverse(subs);
 		int div = subs.get(0);
 		for(int i=1; i<subs.size(); i++) {
+			if(subs.get(i) == 0) {
+				return 0;
+			}
 			div = div/subs.get(i);
 		}
 		return div;

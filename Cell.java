@@ -43,6 +43,15 @@ public class Cell extends StackPane {
 			this.input = num;
 		} else if(num == 9 && this.getChildren().contains(l)) {
 			getChildren().remove(l);
+			this.input = 0;
+		}
+		if(board.getMist()) {
+			for(Cell cell : board.cellArray) {
+				cell.setBackground(new Background(new BackgroundFill(Color.MINTCREAM, CornerRadii.EMPTY, Insets.EMPTY)));
+			}
+			board.highRows();
+			board.highCols();
+			board.highCages();
 		}
 		board.checkWin();
 	}
@@ -66,6 +75,9 @@ public class Cell extends StackPane {
         		int value = counter;
         		btn.setOnAction(e -> {
     				enter(value);
+    				if(board.getMist()) {
+    					board.highRows();
+    				}
     				chooser.close();
     			});
         		btn.setPrefSize(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);

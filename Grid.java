@@ -4,6 +4,7 @@ import javafx.geometry.*;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 
 public class Grid extends GridPane {
 
@@ -14,6 +15,7 @@ public class Grid extends GridPane {
 	String[] sizeTest = {"3/ 1,2", "2- 3,4", "9+ 5,9,13", "12x 6,10,11", "2- 7,8", "2/ 12,16", "6+ 14,15"};
 	String[] loaded = null;
 	ArrayList<Cell> cellArray = new ArrayList<>();
+	boolean showMist = false;
 	
 	public Grid(String[] puzzle) {
 		makeCages(puzzle);
@@ -130,29 +132,30 @@ public class Grid extends GridPane {
 	public boolean checkCages() {
 		for(Cage cage : cageList) {
 			if(cage.getOp() == ' ') {
-				System.out.println(cage.getSum());
+				//System.out.println(cage.getSum());
 				if(!(cage.getTar() == cage.getSum()))
 					break;
 			} else if(cage.getOp() == 'x' || cage.getOp() == '*') {
-				System.out.println(cage.getTar() + "Mul: " + cage.getMul());
+				//System.out.println(cage.getTar() + "Mul: " + cage.getMul());
 				if(!(cage.getTar() == cage.getMul()))
 					break;
 			} else if(cage.getOp() == '/' || cage.getOp() == '÷') {
-				System.out.println(cage.getTar() + "Div: " + cage.getDiv());
+				//System.out.println(cage.getTar() + "Div: " + cage.getDiv());
 				if(!(cage.getTar() == cage.getDiv()))
 					break;
 			} else if(cage.getOp() == '-') {
-				System.out.println(cage.getTar() + "Sub: " + cage.getSub());
+				//System.out.println(cage.getTar() + "Sub: " + cage.getSub());
 				if(!(cage.getTar() == cage.getSub()))
 					break;
 			} else if(cage.getOp() == '+') {
-				System.out.println(cage.getTar() + "Sum: " + cage.getSum());
+				//System.out.println(cage.getTar() + "Sum: " + cage.getSum());
 				if(!(cage.getTar() == cage.getSum()))
 					break;
 			}
-			System.out.println("Cages good");
+			//System.out.println("Cages good");
 			return true;
 		}
+		System.out.println("Cages bad");
 		return false;
 	}
 	
@@ -172,6 +175,100 @@ public class Grid extends GridPane {
 		}
 	}
 	
+	public void highRows() {
+		//Background good = new Background(new BackgroundFill(Color.MINTCREAM, CornerRadii.EMPTY, Insets.EMPTY));
+		Background bad = new Background(new BackgroundFill(Color.INDIANRED, CornerRadii.EMPTY, Insets.EMPTY));
+		for(int i = 0; i<width; i++) {
+			ArrayList<Integer> checker = new ArrayList<>();
+			for(Cell cell : cellArray) {
+				if(cell.getX() == i) {
+					if(checker.contains(cell.getInput())) {
+						for(Cell bCell : cellArray) {
+							if(bCell.getX() == i) {
+								bCell.setBackground(bad);
+							}
+						}
+						System.out.println("Egg1");
+						continue;
+					} else if(cell.getInput() != 0) {
+						checker.add(cell.getInput());
+						System.out.println("Egg2");
+					}
+				}
+			}
+		}
+	}
+	
+	public void highCols() {
+		Background bad = new Background(new BackgroundFill(Color.INDIANRED, CornerRadii.EMPTY, Insets.EMPTY));
+		for(int i = 0; i<width; i++) {
+			ArrayList<Integer> checker = new ArrayList<>();
+			for(Cell cell : cellArray) {
+				if(cell.getY() == i) {
+					if(checker.contains(cell.getInput())) {
+						for(Cell bCell : cellArray) {
+							if(bCell.getY() == i) {
+								bCell.setBackground(bad);
+							}
+						}
+						//System.out.println("Egg1");
+						continue;
+					} else if(cell.getInput() != 0) {
+						checker.add(cell.getInput());
+						//System.out.println("Egg2");
+					}
+				}
+			}
+		}
+	}
+	
+	public void highCages() {
+		Background bad = new Background(new BackgroundFill(Color.INDIANRED, CornerRadii.EMPTY, Insets.EMPTY));
+		for(Cage cage : cageList) {
+			ArrayList<Integer> checker = new ArrayList<>();
+			for(Cell c : cage.getCells()) {
+				if(checker.contains(c.getInput())) {
+					for(Cell d : cage.getCells()) {
+						d.setBackground(bad);
+					}
+				} else if(c.getInput() != 0) {
+					checker.add(c.getInput());
+				}
+			}
+			if(cage.getOp() == ' ') {
+				//System.out.println(cage.getSum());
+				if(!(cage.getTar() == cage.getSum()) && checker.size() == cage.getCells().size())
+					for(Cell cell : cage.getCells()) {
+						cell.setBackground(bad);
+					}
+			} else if(cage.getOp() == 'x' || cage.getOp() == '*') {
+				//System.out.println(cage.getTar() + "Mul: " + cage.getMul());
+				if(!(cage.getTar() == cage.getMul()) && checker.size() == cage.getCells().size())
+					for(Cell cell : cage.getCells()) {
+						cell.setBackground(bad);
+					}
+			} else if(cage.getOp() == '/' || cage.getOp() == '÷') {
+				//System.out.println(cage.getTar() + "Div: " + cage.getDiv());
+				if(!(cage.getTar() == cage.getDiv()) && checker.size() == cage.getCells().size())
+					for(Cell cell : cage.getCells()) {
+						cell.setBackground(bad);
+					}
+			} else if(cage.getOp() == '-') {
+				//System.out.println(cage.getTar() + "Sub: " + cage.getSub());
+				if(!(cage.getTar() == cage.getSub()) && checker.size() == cage.getCells().size())
+					for(Cell cell : cage.getCells()) {
+						cell.setBackground(bad);
+					}
+			} else if(cage.getOp() == '+') {
+				//System.out.println(cage.getTar() + "Sum: " + cage.getSum());
+				if(!(cage.getTar() == cage.getSum()) && checker.size() == cage.getCells().size())
+					for(Cell cell : cage.getCells()) {
+						cell.setBackground(bad);
+					}
+			}
+		}
+	}
+	
 	public ArrayList<Cage> getCages() {
 		return cageList;
 	}
@@ -182,6 +279,14 @@ public class Grid extends GridPane {
 	
 	public HashMap<Integer, Cell> getHash() {
 		return hash;
+	}
+	
+	public void setMist(boolean b) {
+		showMist = b;
+	}
+	
+	public boolean getMist() {
+		return showMist;
 	}
 	
 }

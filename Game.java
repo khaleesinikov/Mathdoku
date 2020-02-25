@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
@@ -34,7 +35,7 @@ public class Game extends Application {
 		MenuItem m21 = new MenuItem("Undo");
 		MenuItem m22 = new MenuItem("Redo");
 		MenuItem m23 = new MenuItem("Clear");
-		MenuItem m24 = new MenuItem("Show errors");
+		CheckMenuItem m24 = new CheckMenuItem("Show errors");
 		mb.getMenus().addAll(m1,m2);
 		m1.getItems().addAll(m11,m12);
 		m2.getItems().addAll(m21,m22,m23,m24);
@@ -128,6 +129,24 @@ public class Game extends Application {
 				        }
 				    }
 				});
+			}
+		});
+		
+		m24.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				Boolean b = board.getMist();
+				board.setMist(!b);
+				//System.out.println(board.getMist());
+				if(board.getMist() == true) {
+					board.highRows();
+					board.highCols();
+					board.highCages();
+				}
+				if(!board.getMist()) {
+					for(Cell cell : board.cellArray) {
+						cell.setBackground(new Background(new BackgroundFill(Color.MINTCREAM, CornerRadii.EMPTY, Insets.EMPTY)));
+					}
+				}
 			}
 		});
 		
