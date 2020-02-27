@@ -16,13 +16,15 @@ public class Cage {
 	char op;
 	int tar;
 	private ArrayList<Cell> cells = new ArrayList<Cell>();
+	private Game manager;
 	
-	public Cage(String[] cells, char operator, int target, Grid board) {
+	public Cage(String[] cells, char operator, int target, Grid board, Game manager) {
 		this.board = board;
 		this.op = operator;
 		this.tar = target;
+		this.manager = manager;
 		for(String cell : cells) { //makes list of cells within cage
-			this.cells.add(new Cell(Integer.parseInt(cell), this.board));
+			this.cells.add(new Cell(Integer.parseInt(cell), this.board, this.manager));
 		}
 		labelCell();
 	}

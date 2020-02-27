@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Stack;
+
 import javafx.geometry.*;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -16,8 +18,12 @@ public class Grid extends GridPane {
 	String[] loaded = null;
 	ArrayList<Cell> cellArray = new ArrayList<>();
 	boolean showMist;
+	Stack<HistObj> undo = new Stack<>();
+	Stack<HistObj> redo = new Stack<>();
+	private Game manager;
 	
-	public Grid(String[] puzzle) {
+	public Grid(String[] puzzle, Game manager) {
+		this.manager = manager;
 		makeCages(puzzle);
 		setAlignment(Pos.CENTER);
 		makeCells();
@@ -80,7 +86,7 @@ public class Grid extends GridPane {
 			}
 			String[] arr2 = cells.split(",");
 			counter += arr2.length;
-			Cage cage = new Cage(arr2, op, tar, this);
+			Cage cage = new Cage(arr2, op, tar, this, manager);
 			cageList.add(cage);
 			this.width = (int) Math.sqrt(counter); //roots the cell count because that's the width
 		}
@@ -98,6 +104,8 @@ public class Grid extends GridPane {
 		for(Cell cell : cellArray) {
 			cell.clear();
 		}
+		undo.clear();
+		redo.clear();
 	}
 	
 	public boolean checkRows() {
@@ -177,7 +185,7 @@ public class Grid extends GridPane {
 			alert.showAndWait();
 			return true;
 		} else {
-			System.out.println("Win condition not met");
+			//System.out.println("Win condition not met");
 			return false;
 		}
 	}
@@ -273,6 +281,30 @@ public class Grid extends GridPane {
 						cell.setBackground(bad);
 					}
 			}
+		}
+	}
+	
+	public void undo() {
+		HistObj h = undo.pop();
+		Cell c = hash.get(h.id);
+		redo.push(new HistObj(c.getID(), c.getInput()));
+		c.setInput(h.value);
+		if(h.value == 0) {
+			c.clear();
+		} else {
+			c.setLabel(h.value);
+		}
+	}
+	
+	public void redo() {
+		HistObj h = redo.pop();
+		Cell c = hash.get(h.id);
+		undo.push(new HistObj(c.getID(), c.getInput()));
+		c.setInput(h.value);
+		if(h.value == 0) {
+			c.clear();
+		} else {
+			c.setLabel(h.value);
 		}
 	}
 	

@@ -14,10 +14,12 @@ public class Cell extends StackPane {
 	private int input;
 	private Label l = null;
 	private Grid board;
+	private Game manager;
 	
-	public Cell(int id, Grid board) {
+	public Cell(int id, Grid board, Game manager) {
 		this.board = board;
 		this.id = id;
+		this.manager = manager;
 		BorderStroke borderStroke = new BorderStroke(Color.SEAGREEN, BorderStrokeStyle.SOLID, null, new BorderWidths(1, 1, 1, 1));
         setBorder(new Border(borderStroke));
         setMinSize(60,60);
@@ -40,6 +42,11 @@ public class Cell extends StackPane {
 			this.l = new Label(Integer.toString(num));
 			StackPane.setAlignment(l, Pos.CENTER);
 			getChildren().add(l);
+			HistObj h = new HistObj(id, input);
+			board.undo.push(h);
+			manager.m21.setDisable(false);
+			board.redo.clear();
+			manager.m22.setDisable(true);
 			this.input = num;
 		} else if(num == 9 && this.getChildren().contains(l)) {
 			getChildren().remove(l);
@@ -158,6 +165,24 @@ public class Cell extends StackPane {
 	
 	public int getInput() {
 		return input;
+	}
+	
+	public void setInput(int i) {
+		this.input = i;
+	}
+	
+	public String getLabel() {
+		return l.getText();
+	}
+	
+	public void setLabel(int i) {
+		String num = Integer.toString(i);
+		if(this.getChildren().contains(l)) {
+			getChildren().remove(l);
+		}
+		this.l = new Label(num);
+		StackPane.setAlignment(l, Pos.CENTER);
+		getChildren().add(l);
 	}
 	
 	@SuppressWarnings("unused")
