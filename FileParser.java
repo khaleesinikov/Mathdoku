@@ -2,6 +2,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -18,10 +20,13 @@ public class FileParser {
 	public FileParser(File file) {
 		System.out.println(file.getAbsolutePath() + " selected.");
 		try {
-			br = new BufferedReader(new FileReader(file));
-			br2 = new BufferedReader(new FileReader(file));
+			br = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
+			br2 = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
 		} catch (FileNotFoundException e) {
-			System.err.println("File not found");
+			System.err.println("File not found, somehow");
+			e.printStackTrace();
+		} catch (IOException e) {
+			System.err.println("I'm impressed you managed to trigger this");
 			e.printStackTrace();
 		}
 	}
@@ -150,12 +155,13 @@ public class FileParser {
 	}
 	
 	public boolean checkIfOp() {
-		ArrayList<String> operators = new ArrayList<>(Arrays.asList("+", "x", "*", "/", "÷", "-", "1", "2", "3", "4", "5", "6", "7", "8"));
+		ArrayList<String> operators = new ArrayList<>(Arrays.asList("+", "x", "*", "/", "÷", "\u00F7", "-", "1", "2", "3", "4", "5", "6", "7", "8"));
 		String[] test = null;
 		for(String str : puzzle) {
 			test = str.split(" ");
 			String toCheck = test[0];
 			toCheck = String.valueOf(toCheck.charAt(toCheck.length() - 1));
+			//System.out.println(toCheck);
 			if(!operators.contains(toCheck))
 				return false;
 		}
@@ -165,5 +171,5 @@ public class FileParser {
 	public String[] getArray() {
 		return puzzle;
 	}
-
+	
 }
