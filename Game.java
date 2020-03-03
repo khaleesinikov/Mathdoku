@@ -7,6 +7,9 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
@@ -17,7 +20,7 @@ import javafx.stage.Stage;
 public class Game extends Application {
 	
 	String[] sizeTest = {"3/ 1,2", "2- 3,4", "9+ 5,9,13", "12x 6,10,11", "2- 7,8", "2/ 12,16", "6+ 14,15"};
-	String[] examplePuzzle = {"11+ 1,7", "2Ã· 2,3", "20x 4,10", "6x 5,6,12,18", "3- 8,9", "3Ã· 11,17", "240x 13,14,19,20", "6x 15,16", "6x 21,27", "7+ 22,28,29", "30x 23,24", "6x 25,26", "9+ 30,36", "8+ 31,32,33", "2Ã· 34,35"};
+	String[] examplePuzzle = {"11+ 1,7", "2÷ 2,3", "20x 4,10", "6x 5,6,12,18", "3- 8,9", "3÷ 11,17", "240x 13,14,19,20", "6x 15,16", "6x 21,27", "7+ 22,28,29", "30x 23,24", "6x 25,26", "9+ 30,36", "8+ 31,32,33", "2÷ 34,35"};
 	String[] puzzle;
 	Grid board;
 	MenuItem m21, m22;
@@ -25,6 +28,7 @@ public class Game extends Application {
 	VBox vb;
 	Stage s, newWindow;
 	TextArea ta;
+	int fontSize = 12;
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -37,6 +41,7 @@ public class Game extends Application {
 		MenuBar mb = new MenuBar();
 		Menu m1 = new Menu("Load");
 		Menu m2 = new Menu("Edit");
+		Menu m3 = new Menu("Text Size");
 		MenuItem m11 = new MenuItem("Load from file...");
 		MenuItem m12 = new MenuItem("Load from text...");
 		m21 = new MenuItem("Undo");
@@ -45,9 +50,18 @@ public class Game extends Application {
 		m22.setDisable(true);
 		MenuItem m23 = new MenuItem("Clear");
 		m24 = new CheckMenuItem("Show errors");
-		mb.getMenus().addAll(m1,m2);
+		ToggleGroup tg = new ToggleGroup();
+		RadioMenuItem m31 = new RadioMenuItem("Small");
+		m31.setToggleGroup(tg);
+		m31.setSelected(true);
+		RadioMenuItem m32 = new RadioMenuItem("Medium");
+		m32.setToggleGroup(tg);
+		RadioMenuItem m33 = new RadioMenuItem("Large");
+		m33.setToggleGroup(tg);
+		mb.getMenus().addAll(m1,m2,m3);
 		m1.getItems().addAll(m11,m12);
 		m2.getItems().addAll(m21,m22,m23,m24);
+		m3.getItems().addAll(m31,m32,m33);
 		vb = new VBox(mb, board);
 		VBox.setVgrow(board, Priority.ALWAYS);
 		
@@ -81,6 +95,8 @@ public class Game extends Application {
 			}
 		});
 		
+		m21.setAccelerator(new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN));
+		
 		m22.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
 				board.redo();
@@ -98,6 +114,8 @@ public class Game extends Application {
 				}
 			}
 		});
+		
+		m22.setAccelerator(new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN));
 		
 		m23.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
@@ -130,6 +148,27 @@ public class Game extends Application {
 						cell.setBackground(new Background(new BackgroundFill(Color.MINTCREAM, CornerRadii.EMPTY, Insets.EMPTY)));
 					}
 				}
+			}
+		});
+		
+		m31.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				fontSize = 12;
+				board.changeFont();
+			}
+		});
+		
+		m32.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				fontSize = 15;
+				board.changeFont();
+			}
+		});
+		
+		m33.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				fontSize = 18;
+				board.changeFont();
 			}
 		});
 		

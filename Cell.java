@@ -1,8 +1,12 @@
+import javafx.event.EventHandler;
 import javafx.geometry.*;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -31,16 +35,19 @@ public class Cell extends StackPane {
         
         /*Label egg = new Label(Integer.toString(id)); //labels cell; use for testing
         egg.setAlignment(Pos.CENTER);
-        getChildren().add(egg);*/
+        getChildren().add(egg);
+        System.out.println(egg.getFont());*/
 	}
 	
 	public void enter(int num) {
+		Font font = new Font("System Regular", manager.fontSize);
 		if(num > 0 && num <= board.acquireWidth()) {
 			if(this.getChildren().contains(l)) {
 				getChildren().remove(l);
 			}
 			this.l = new Label(Integer.toString(num));
 			StackPane.setAlignment(l, Pos.CENTER);
+			l.setFont(font);
 			getChildren().add(l);
 			HistObj h = new HistObj(id, input);
 			board.undo.push(h);
@@ -127,6 +134,31 @@ public class Cell extends StackPane {
         		tf.clear();
         	}
         });
+        tf.setOnKeyPressed(new EventHandler<KeyEvent>()
+        {
+            @Override
+            public void handle(KeyEvent ke)
+            {
+                if (ke.getCode().equals(KeyCode.ENTER))
+                {
+                	String text = tf.getText();
+                	if(isNumber(text)) {
+                		int n = Integer.parseInt(text);
+                		if(n>0 && n<=board.acquireWidth()) {
+                			enter(n);
+                			chooser.close();
+                		} else {
+                			tf.clear();
+                		}
+                	} else if(tf.getText().trim().isEmpty()) {
+                		enter(9);
+                		chooser.close();
+                	} else {
+                		tf.clear();
+                	}
+                }
+            }
+        });
         g.add(ent, 2, 3);
         RowConstraints r = new RowConstraints();
 	    r.setPercentHeight(100.0/4.0);
@@ -134,6 +166,19 @@ public class Cell extends StackPane {
         chooser.setTitle("Entering value at (" + Integer.toString(xCo) + "," + Integer.toString(yCo) + ")");
         chooser.setScene(new Scene(g, 210, 275));
         chooser.show();
+	}
+	
+	public void changeFont() {
+		Font font = new Font("System Regular", manager.fontSize);
+		if(this.getChildren().contains(l)) {
+			getChildren().remove(l);
+		}
+		if(input != 0) {
+			this.l = new Label(Integer.toString(input));
+			l.setFont(font);
+			StackPane.setAlignment(l, Pos.CENTER);
+			this.getChildren().add(l);
+		}
 	}
 	
 	public void clear() {
@@ -176,11 +221,13 @@ public class Cell extends StackPane {
 	}
 	
 	public void setLabel(int i) {
+		Font font = new Font("System Regular", manager.fontSize);
 		String num = Integer.toString(i);
 		if(this.getChildren().contains(l)) {
 			getChildren().remove(l);
 		}
 		this.l = new Label(num);
+		l.setFont(font);
 		StackPane.setAlignment(l, Pos.CENTER);
 		getChildren().add(l);
 	}

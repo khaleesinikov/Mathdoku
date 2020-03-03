@@ -9,6 +9,7 @@ import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 public class Cage {
 	
@@ -17,6 +18,7 @@ public class Cage {
 	int tar;
 	private ArrayList<Cell> cells = new ArrayList<Cell>();
 	private Game manager;
+	private Label task = null;
 	
 	public Cage(String[] cells, char operator, int target, Grid board, Game manager) {
 		this.board = board;
@@ -81,15 +83,20 @@ public class Cage {
 	}
 	
 	public void labelCell() {
+		Font font = new Font("System Regular", manager.fontSize);
 		int smol = 0;
 		for(Cell cell : cells) {
+			if(cell.getChildren().contains(task)) {
+				cell.getChildren().remove(task);
+			}
 			int compare = cell.getID();
 			if(compare < smol || smol == 0) {
 				smol = cell.getID();
 			}
 		}
 		String labStr = Integer.toString(tar) + op;
-		Label task = new Label(labStr);
+		task = new Label(labStr);
+		task.setFont(font);
 		for(Cell cell : cells) {
 			if(cell.getID() == smol) {
 				StackPane.setAlignment(task, Pos.TOP_LEFT);
