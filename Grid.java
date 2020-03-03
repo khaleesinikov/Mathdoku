@@ -1,12 +1,20 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.Stack;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.geometry.*;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.effect.BoxBlur;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.util.Duration;
 
 public class Grid extends GridPane {
 
@@ -178,16 +186,67 @@ public class Grid extends GridPane {
 		if(checkRows() && checkCols() && checkCages()) {
 			System.out.println("Win condition met");
 			setMouseTransparent(true);
+			colourWin();
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setTitle("Success");
 			alert.setHeaderText("You completed the puzzle correctly");
 			alert.setContentText("It's gamer time");
 			alert.showAndWait();
+			animateWin();
 			return true;
 		} else {
 			//System.out.println("Win condition not met");
 			return false;
 		}
+	}
+	
+	private void colourWin() {
+		for(Cage cage : cageList) {
+			cage.winBorders();
+		}
+		for(Cell c : cellArray) {
+			c.setBackground(new Background(new BackgroundFill(Color.PALEVIOLETRED, CornerRadii.EMPTY, Insets.EMPTY)));
+		}
+	}
+	
+	private void animateWin() {
+		Random r = new Random();
+		Pane p = new StackPane();
+		this.add(p, 0, 0, width, width);
+		for(int i = 0; i<200; i++) {
+			Circle cir = new Circle(r.nextDouble()*40, randomColour());
+			cir.setTranslateX(r.nextDouble()*this.getWidth()-this.getWidth()*0.5);
+			cir.setTranslateY(r.nextDouble()*this.getHeight()-this.getHeight()*0.5);
+			cir.setEffect(new BoxBlur(10, 10, 3));
+			p.getChildren().add(cir);
+		}
+		Timeline tl = new Timeline();
+		for(Node circle : p.getChildren()) {
+			tl.getKeyFrames().addAll(
+			        new KeyFrame(Duration.ZERO, // set start position at 0
+			            new KeyValue(circle.translateXProperty(), r.nextDouble()*this.getWidth()-this.getWidth()*0.5),
+			            new KeyValue(circle.translateYProperty(), r.nextDouble()*this.getHeight()-this.getHeight()*0.5)
+			        ),
+			        new KeyFrame(new Duration(10000), // set end position at 40s
+			            new KeyValue(circle.translateXProperty(), r.nextDouble()*this.getWidth()-this.getWidth()*0.5),
+			            new KeyValue(circle.translateYProperty(), r.nextDouble()*this.getHeight()-this.getHeight()*0.5)
+			        )
+			    );
+		}
+		tl.play();
+	}
+	
+	private Color randomColour() {
+		Random r = new Random();
+		double red = r.nextDouble();
+		double blue = r.nextDouble()/2;
+		double green = r.nextDouble()/2;
+		Color randomColor = new Color(red, green, blue, r.nextDouble());
+		randomColor.brighter();
+		randomColor.brighter();
+		randomColor.brighter();
+		randomColor.brighter();
+		return randomColor;
 	}
 	
 	public void highRows() {

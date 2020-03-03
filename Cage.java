@@ -124,6 +124,32 @@ public class Cage {
 		}
 	}
 	
+	public void winBorders() {
+		int w = board.acquireWidth();
+		for(Cell cell : cells) {
+			double top = 2;
+			double bot = 2;
+			double lef = 2;
+			double rit = 2;
+			for(Cell aCell : cells) {
+				if(cell.getID() == (aCell.getID() - 1) && (cell.getID() % w) != 0) {
+					rit = 0.1;
+				}
+				if(cell.getID() == (aCell.getID() + 1) && (aCell.getID() % w) != 0) {
+					lef = 0.1;
+				}
+				if(cell.getID() == aCell.getID() - w) {
+					bot = 0.1;
+				}
+				if(cell.getID() == aCell.getID() + w) {
+					top = 0.1;
+				}
+			}
+			BorderStroke b = new BorderStroke(Color.MEDIUMPURPLE, BorderStrokeStyle.SOLID, null, new BorderWidths(top, rit, bot, lef));
+			cell.setBorder(new Border(b));
+		}
+	}
+	
 	public int getTar() {
 		return tar;
 	}

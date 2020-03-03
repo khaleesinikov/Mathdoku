@@ -32,7 +32,7 @@ public class Game extends Application {
 	
 	public void start(Stage s) {
 		this.s = s;
-		this.board = new Grid(sizeTest, this);
+		this.board = new Grid(examplePuzzle, this);
 		
 		MenuBar mb = new MenuBar();
 		Menu m1 = new Menu("Load");
