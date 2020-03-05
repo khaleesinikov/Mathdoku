@@ -2,6 +2,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.*;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
@@ -110,7 +111,7 @@ public class Cell extends StackPane {
         }
         TextField tf = new TextField();
         tf.setPrefSize(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
-        tf.setPromptText("Enter desired value");
+        tf.setPromptText("Enter value");
         if(input != 0) {
         	tf.setText(Integer.toString(input));
         }
@@ -164,6 +165,7 @@ public class Cell extends StackPane {
 	    r.setPercentHeight(100.0/4.0);
 	    g.getRowConstraints().add(r);
         chooser.setTitle("Entering value at (" + Integer.toString(xCo) + "," + Integer.toString(yCo) + ")");
+        chooser.getIcons().add(new Image("file:eggicon.png"));
         chooser.setScene(new Scene(g, 210, 275));
         chooser.show();
 	}

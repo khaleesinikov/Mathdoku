@@ -10,9 +10,11 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.effect.BoxBlur;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class Grid extends GridPane {
@@ -20,7 +22,7 @@ public class Grid extends GridPane {
 	private int width; //NxN dimensions
 	private ArrayList<Cage> cageList; //holds list of cages associated with board
 	private HashMap<Integer, Cell> hash = new HashMap<>(); //temp hashmap to make board
-	String[] examplePuzzle = {"11+ 1,7", "2÷ 2,3", "20x 4,10", "6x 5,6,12,18", "3- 8,9", "3÷ 11,17", "240x 13,14,19,20", "6x 15,16", "6x 21,27", "7+ 22,28,29", "30x 23,24", "6x 25,26", "9+ 30,36", "8+ 31,32,33", "2÷ 34,35"};
+	String[] examplePuzzle = {"11+ 1,7", "2Ã· 2,3", "20x 4,10", "6x 5,6,12,18", "3- 8,9", "3Ã· 11,17", "240x 13,14,19,20", "6x 15,16", "6x 21,27", "7+ 22,28,29", "30x 23,24", "6x 25,26", "9+ 30,36", "8+ 31,32,33", "2Ã· 34,35"};
 	String[] sizeTest = {"3/ 1,2", "2- 3,4", "9+ 5,9,13", "12x 6,10,11", "2- 7,8", "2/ 12,16", "6+ 14,15"};
 	String[] loaded = null;
 	ArrayList<Cell> cellArray = new ArrayList<>();
@@ -161,7 +163,7 @@ public class Grid extends GridPane {
 				//System.out.println(cage.getTar() + "Mul: " + cage.getMul());
 				if(!(cage.getTar() == cage.getMul()))
 					break;
-			} else if(cage.getOp() == '/' || cage.getOp() == '÷') {
+			} else if(cage.getOp() == '/' || cage.getOp() == 'Ã·') {
 				//System.out.println(cage.getTar() + "Div: " + cage.getDiv());
 				if(!(cage.getTar() == cage.getDiv()))
 					break;
@@ -191,6 +193,7 @@ public class Grid extends GridPane {
 			alert.setTitle("Success");
 			alert.setHeaderText("You completed the puzzle correctly");
 			alert.setContentText("It's gamer time");
+			((Stage)alert.getDialogPane().getScene().getWindow()).getIcons().add(new Image("file:eggicon.png"));
 			alert.showAndWait();
 			return true;
 		} else {
@@ -329,7 +332,7 @@ public class Grid extends GridPane {
 					for(Cell cell : cage.getCells()) {
 						cell.setBackground(bad);
 					}
-			} else if(cage.getOp() == '/' || cage.getOp() == '÷') {
+			} else if(cage.getOp() == '/' || cage.getOp() == 'Ã·') {
 				//System.out.println(cage.getTar() + "Div: " + cage.getDiv());
 				if(!(cage.getTar() == cage.getDiv()) && checker.size() == cage.getCells().size())
 					for(Cell cell : cage.getCells()) {

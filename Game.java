@@ -1,12 +1,15 @@
 import java.io.File;
 import java.util.Optional;
-
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.*;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -19,8 +22,9 @@ import javafx.stage.Stage;
 
 public class Game extends Application {
 	
-	String[] sizeTest = {"3/ 1,2", "2- 3,4", "9+ 5,9,13", "12x 6,10,11", "2- 7,8", "2/ 12,16", "6+ 14,15"};
-	String[] examplePuzzle = {"11+ 1,7", "2÷ 2,3", "20x 4,10", "6x 5,6,12,18", "3- 8,9", "3÷ 11,17", "240x 13,14,19,20", "6x 15,16", "6x 21,27", "7+ 22,28,29", "30x 23,24", "6x 25,26", "9+ 30,36", "8+ 31,32,33", "2÷ 34,35"};
+	String[] easy = {"3/ 1,2", "2- 3,4", "9+ 5,9,13", "12x 6,10,11", "2- 7,8", "2/ 12,16", "6+ 14,15"};
+	String[] medium = {"11+ 1,7", "2Ã· 2,3", "20x 4,10", "6x 5,6,12,18", "3- 8,9", "3Ã· 11,17", "240x 13,14,19,20", "6x 15,16", "6x 21,27", "7+ 22,28,29", "30x 23,24", "6x 25,26", "9+ 30,36", "8+ 31,32,33", "2Ã· 34,35"};
+	String[] hard = {"1- 1,9", "3+ 2,3", "21+ 4,5,13", "7+ 6,14", "11+ 7,15", "6+ 8,16", "10+ 10,11", "3+ 12,20", "1- 17,18", "11+ 19,27,35", "4+ 21,29", "12+ 22,30", "7- 23,31", "1- 24,32", "10+ 25,26", "3- 28,36", "1- 33,34", "15+ 37,38,45", "3 39", "7- 40,48" ,"6+ 41,42", "5- 43,51", "2- 44,52", "15+ 46,47", "7- 49,57", "2- 50,58", "5 59", "9+ 60,61,62", "10+ 53,54", "5- 55,56", "7+ 63,64"};
 	String[] puzzle;
 	Grid board;
 	MenuItem m21, m22;
@@ -36,7 +40,53 @@ public class Game extends Application {
 	
 	public void start(Stage s) {
 		this.s = s;
-		this.board = new Grid(examplePuzzle, this);
+		
+		Stage intro = new Stage();
+		intro.initModality(Modality.APPLICATION_MODAL);
+		Label diffLabel = new Label("Select starting puzzle:");
+		RadioButton buttonEasy = new RadioButton("Easy (4x4)");
+		buttonEasy.setPadding(new Insets(5,0,5,0));
+		RadioButton buttonMed = new RadioButton("Medium (6x6)");
+		RadioButton buttonHard = new RadioButton("Hard (8x8)");
+		buttonHard.setPadding(new Insets(5,0,10,0));
+		ToggleGroup diffGroup = new ToggleGroup();
+		buttonEasy.setToggleGroup(diffGroup);
+		buttonMed.setToggleGroup(diffGroup);
+		buttonHard.setToggleGroup(diffGroup);
+		buttonEasy.setSelected(true);
+		Button confirm = new Button("Confirm");
+		confirm.prefWidth(100);
+		confirm.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				if(buttonEasy.isSelected()) {
+					puzzle = easy;
+				} else if(buttonMed.isSelected()) {
+					puzzle = medium;
+				} else if(buttonHard.isSelected()) {
+					puzzle = hard;
+				}
+				intro.close();
+			}
+		});
+		VBox diff = new VBox(diffLabel, buttonEasy, buttonMed, buttonHard, confirm);
+		diff.setPadding(new Insets(0,30,0,0));
+		diff.setAlignment(Pos.CENTER);
+		Image egg = new Image("file:eggicon.png", 100, 100, false, false);
+		ImageView iv = new ImageView(egg);
+		HBox welcome = new HBox(diff, iv);
+		welcome.setPadding(new Insets(15));
+		intro.setScene(new Scene(welcome, 300, 145));
+		intro.setTitle("Welcome to EggDoKu");
+		intro.getIcons().add(new Image("file:eggicon.png"));
+		intro.setResizable(false);
+		intro.showAndWait();
+		
+		try {
+			this.board = new Grid(puzzle, this);
+		} catch(NullPointerException npe) {
+			Platform.exit();
+	        System.exit(0);
+		}
 		
 		MenuBar mb = new MenuBar();
 		Menu m1 = new Menu("Load");
@@ -123,6 +173,7 @@ public class Game extends Application {
 				alert.setTitle("Clear confirmation");
 				alert.setHeaderText("Are you sure you want to clear the board?");
 				alert.setContentText("Please confirm action to proceed");
+				((Stage)alert.getDialogPane().getScene().getWindow()).getIcons().add(new Image("file:eggicon.png"));
 				Optional<ButtonType> result = alert.showAndWait();
 				if (result.get() == ButtonType.OK){
 				    board.clear();
@@ -177,6 +228,7 @@ public class Game extends Application {
 		s.minHeightProperty().bind(s.widthProperty());
         s.maxHeightProperty().bind(s.widthProperty());
         s.setTitle("EggDoKu");
+        s.getIcons().add(new Image("file:eggicon.png"));
         Scene scene = new Scene(vb, 600, 600);
         s.setScene(scene);
         s.show();
@@ -201,18 +253,10 @@ public class Game extends Application {
 					vb.getChildren().add(board);
 					VBox.setVgrow(board, Priority.ALWAYS);
 				} catch(Exception ee) {
-					Alert alert = new Alert(AlertType.ERROR);
-					alert.setTitle("Config Failed");
-					alert.setHeaderText("Your config is bad and you should feel bad");
-					alert.setContentText("There was a mistake in your config file that meant the puzzle could not be created");
-					alert.showAndWait();
+					configFailAlert();
 				}
 			} else {
-				Alert alert = new Alert(AlertType.ERROR);
-				alert.setTitle("Config Failed");
-				alert.setHeaderText("Your config is bad and you should feel bad");
-				alert.setContentText("There was a mistake in your config file that meant the puzzle could not be created");
-				alert.showAndWait();
+				configFailAlert();
 			}
 		}
 		m21.setDisable(true);
@@ -259,23 +303,24 @@ public class Game extends Application {
 	        	vb.getChildren().add(board);
 				VBox.setVgrow(board, Priority.ALWAYS);
 	        } catch(Exception ee) {
-	        	Alert alert = new Alert(AlertType.ERROR);
-				alert.setTitle("Config Failed");
-				alert.setHeaderText("Your config is bad and you should feel bad");
-				alert.setContentText("There was a mistake in your config text that meant the puzzle could not be created");
-				alert.showAndWait();
+	        	configFailAlert();
 	        }
 			newWindow.close();
         } else {
-        	Alert alert = new Alert(AlertType.ERROR);
-			alert.setTitle("Config Failed");
-			alert.setHeaderText("Your config is bad and you should feel bad");
-			alert.setContentText("There was a mistake in your config text that meant the puzzle could not be created");
-			alert.showAndWait();
+        	configFailAlert();
 			newWindow.close();
         }
         m21.setDisable(true);
 		m22.setDisable(true);
+	}
+	
+	public void configFailAlert() {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Config Failed");
+		alert.setHeaderText("Your config is bad and you should feel bad");
+		alert.setContentText("There was a mistake in your config text that meant the puzzle could not be created");
+		((Stage)alert.getDialogPane().getScene().getWindow()).getIcons().add(new Image("file:eggicon.png"));
+		alert.showAndWait();
 	}
 
 }

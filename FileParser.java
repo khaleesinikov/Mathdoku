@@ -155,7 +155,7 @@ public class FileParser {
 	}
 	
 	public boolean checkIfOp() {
-		ArrayList<String> operators = new ArrayList<>(Arrays.asList("+", "x", "*", "/", "÷", "\u00F7", "-", "1", "2", "3", "4", "5", "6", "7", "8"));
+		ArrayList<String> operators = new ArrayList<>(Arrays.asList("+", "x", "*", "/", "Ã·", "\u00F7", "-", "1", "2", "3", "4", "5", "6", "7", "8"));
 		String[] test = null;
 		for(String str : puzzle) {
 			test = str.split(" ");
