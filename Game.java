@@ -254,9 +254,11 @@ public class Game extends Application {
 					VBox.setVgrow(board, Priority.ALWAYS);
 				} catch(Exception ee) {
 					configFailAlert();
+					loadFromFile();
 				}
 			} else {
 				configFailAlert();
+				loadFromFile();
 			}
 		}
 		m21.setDisable(true);
@@ -287,6 +289,7 @@ public class Game extends Application {
 		conf.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
 		        alsoLoadFromText();
+		        //newWindow.close();
 		    }
 		});
 	}
@@ -308,7 +311,6 @@ public class Game extends Application {
 			newWindow.close();
         } else {
         	configFailAlert();
-			newWindow.close();
         }
         m21.setDisable(true);
 		m22.setDisable(true);
@@ -319,6 +321,9 @@ public class Game extends Application {
 		alert.setTitle("Config Failed");
 		alert.setHeaderText("Your config is bad and you should feel bad");
 		alert.setContentText("There was a mistake in your config text that meant the puzzle could not be created");
+		Image image = new Image("file:crackedeggicon.png",80,80,false,false);
+		ImageView imageView = new ImageView(image);
+		alert.setGraphic(imageView);
 		((Stage)alert.getDialogPane().getScene().getWindow()).getIcons().add(new Image("file:eggicon.png"));
 		alert.showAndWait();
 	}

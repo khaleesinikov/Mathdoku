@@ -11,6 +11,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -193,6 +194,9 @@ public class Grid extends GridPane {
 			alert.setTitle("Success");
 			alert.setHeaderText("You completed the puzzle correctly");
 			alert.setContentText("It's gamer time");
+			Image image = new Image("file:eggtime.png",80,80,false,false);
+			ImageView imageView = new ImageView(image);
+			alert.setGraphic(imageView);
 			((Stage)alert.getDialogPane().getScene().getWindow()).getIcons().add(new Image("file:eggicon.png"));
 			alert.showAndWait();
 			return true;
@@ -229,7 +233,7 @@ public class Grid extends GridPane {
 			            new KeyValue(circle.translateXProperty(), r.nextDouble()*this.getWidth()-this.getWidth()*0.5),
 			            new KeyValue(circle.translateYProperty(), r.nextDouble()*this.getHeight()-this.getHeight()*0.5)
 			        ),
-			        new KeyFrame(new Duration(10000), // set end position at 40s
+			        new KeyFrame(new Duration(20000), // set end position at 40s
 			            new KeyValue(circle.translateXProperty(), r.nextDouble()*this.getWidth()-this.getWidth()*0.5),
 			            new KeyValue(circle.translateYProperty(), r.nextDouble()*this.getHeight()-this.getHeight()*0.5)
 			        )
