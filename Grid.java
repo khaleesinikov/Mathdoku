@@ -190,6 +190,7 @@ public class Grid extends GridPane {
 			setMouseTransparent(true);
 			colourWin();
 			animateWin();
+			cookEgg();
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setTitle("Success");
 			alert.setHeaderText("You completed the puzzle correctly");
@@ -213,6 +214,42 @@ public class Grid extends GridPane {
 		for(Cell c : cellArray) {
 			c.setBackground(new Background(new BackgroundFill(Color.PALEVIOLETRED, CornerRadii.EMPTY, Insets.EMPTY)));
 		}
+	}
+	
+	private void cookEgg() {
+		Random r = new Random();
+		Pane p = new StackPane();
+		this.add(p, 0, 0, width, width);
+		for(int i=0; i<60; i++) {
+			Image image = new Image("file:eggicon.png", 40, 40, false, false);
+			ImageView iv = new ImageView(image);
+			iv.setTranslateX(r.nextDouble()*this.getWidth()-this.getWidth()*0.5);
+			iv.setTranslateY(r.nextDouble()*this.getHeight()-this.getHeight()*0.5);
+			p.getChildren().add(iv);
+		}
+		for(int i=0; i<30; i++) {
+			Image image = new Image("file:eggtime.png", 40, 40, false, false);
+			ImageView iv = new ImageView(image);
+			iv.setTranslateX(r.nextDouble()*this.getWidth()-this.getWidth()*0.5);
+			iv.setTranslateY(r.nextDouble()*this.getHeight()-this.getHeight()*0.5);
+			p.getChildren().add(iv);
+		}
+		Timeline tl = new Timeline();
+		for(Node egg : p.getChildren()) {
+			tl.getKeyFrames().addAll(
+			        new KeyFrame(Duration.ZERO, // set start position at 0
+			            new KeyValue(egg.translateXProperty(), r.nextDouble()*this.getWidth()-this.getWidth()*0.5),
+			            new KeyValue(egg.translateYProperty(), r.nextDouble()*this.getHeight()-this.getHeight()*0.5),
+			            new KeyValue(egg.rotateProperty(), 0)
+			        ),
+			        new KeyFrame(new Duration(20000), // set end position at 40s
+			            new KeyValue(egg.translateXProperty(), r.nextDouble()*this.getWidth()-this.getWidth()*0.5),
+			            new KeyValue(egg.translateYProperty(), r.nextDouble()*this.getHeight()-this.getHeight()*0.5),
+			            new KeyValue(egg.rotateProperty(), (r.nextInt(360) + 720))
+			        )
+			    );
+		}
+		tl.play();
 	}
 	
 	private void animateWin() {
