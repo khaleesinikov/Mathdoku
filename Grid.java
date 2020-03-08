@@ -212,7 +212,7 @@ public class Grid extends GridPane {
 			cage.winBorders();
 		}
 		for(Cell c : cellArray) {
-			c.setBackground(new Background(new BackgroundFill(Color.PALEVIOLETRED, CornerRadii.EMPTY, Insets.EMPTY)));
+			c.setBackground(new Background(new BackgroundFill(Color.MEDIUMVIOLETRED, CornerRadii.EMPTY, Insets.EMPTY)));
 		}
 	}
 	
@@ -282,8 +282,8 @@ public class Grid extends GridPane {
 	private Color randomColour() {
 		Random r = new Random();
 		double red = r.nextDouble();
-		double blue = r.nextDouble()/2;
-		double green = r.nextDouble()/2;
+		double blue = r.nextDouble();
+		double green = r.nextDouble();
 		Color randomColor = new Color(red, green, blue, r.nextDouble());
 		randomColor.brighter();
 		randomColor.brighter();

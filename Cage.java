@@ -152,7 +152,7 @@ public class Cage {
 					top = 0.1;
 				}
 			}
-			BorderStroke b = new BorderStroke(Color.MEDIUMPURPLE, BorderStrokeStyle.SOLID, null, new BorderWidths(top, rit, bot, lef));
+			BorderStroke b = new BorderStroke(Color.PURPLE, BorderStrokeStyle.SOLID, null, new BorderWidths(top, rit, bot, lef));
 			cell.setBorder(new Border(b));
 		}
 	}
