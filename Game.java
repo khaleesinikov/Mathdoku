@@ -72,13 +72,13 @@ public class Game extends Application {
 		VBox diff = new VBox(diffLabel, buttonEasy, buttonMed, buttonHard, confirm);
 		diff.setPadding(new Insets(0,30,0,0));
 		diff.setAlignment(Pos.CENTER);
-		Image egg = new Image("file:eggicon.png", 100, 100, false, false);
+		Image egg = new Image(this.getClass().getResourceAsStream("/eggicon.png"), 100, 100, false, false);
 		ImageView iv = new ImageView(egg);
 		HBox welcome = new HBox(diff, iv);
 		welcome.setPadding(new Insets(15));
 		intro.setScene(new Scene(welcome, 300, 145));
 		intro.setTitle("Welcome to EggDoKu");
-		intro.getIcons().add(new Image("file:eggicon.png"));
+		intro.getIcons().add(new Image(this.getClass().getResourceAsStream("/eggicon.png")));
 		intro.setResizable(false);
 		intro.showAndWait();
 		
@@ -188,7 +188,7 @@ public class Game extends Application {
 				alert.setTitle("Clear confirmation");
 				alert.setHeaderText("Are you sure you want to clear the board?");
 				alert.setContentText("Please confirm action to proceed");
-				((Stage)alert.getDialogPane().getScene().getWindow()).getIcons().add(new Image("file:eggicon.png"));
+				((Stage)alert.getDialogPane().getScene().getWindow()).getIcons().add(new Image(this.getClass().getResourceAsStream("/eggicon.png")));
 				Optional<ButtonType> result = alert.showAndWait();
 				if (result.get() == ButtonType.OK){
 				    board.clear();
@@ -256,7 +256,7 @@ public class Game extends Application {
 		s.minHeightProperty().bind(s.widthProperty());
         s.maxHeightProperty().bind(s.widthProperty());
         s.setTitle("EggDoKu");
-        s.getIcons().add(new Image("file:eggicon.png"));
+        s.getIcons().add(new Image(this.getClass().getResourceAsStream("/eggicon.png")));
         Scene scene = new Scene(vb, 600, 600);
         s.setScene(scene);
         s.show();
@@ -373,10 +373,10 @@ public class Game extends Application {
 		alert.setTitle("Config Failed");
 		alert.setHeaderText("Your config is bad and you should feel bad");
 		alert.setContentText("There was a mistake in your config text that meant the puzzle could not be created");
-		Image image = new Image("file:crackedeggicon.png",80,80,false,false);
+		Image image = new Image(this.getClass().getResourceAsStream("/crackedeggicon.png"),80,80,false,false);
 		ImageView imageView = new ImageView(image);
 		alert.setGraphic(imageView);
-		((Stage)alert.getDialogPane().getScene().getWindow()).getIcons().add(new Image("file:eggicon.png"));
+		((Stage)alert.getDialogPane().getScene().getWindow()).getIcons().add(new Image(this.getClass().getResourceAsStream("/eggicon.png")));
 		alert.showAndWait();
 	}
 

@@ -196,10 +196,10 @@ public class Grid extends GridPane {
 			alert.setTitle("Success");
 			alert.setHeaderText("You completed the puzzle correctly");
 			alert.setContentText("It's gamer time");
-			Image image = new Image("file:eggtime.png",80,80,false,false);
+			Image image = new Image(this.getClass().getResourceAsStream("/eggtime.png"),80,80,false,false);
 			ImageView imageView = new ImageView(image);
 			alert.setGraphic(imageView);
-			((Stage)alert.getDialogPane().getScene().getWindow()).getIcons().add(new Image("file:eggicon.png"));
+			((Stage)alert.getDialogPane().getScene().getWindow()).getIcons().add(new Image(this.getClass().getResourceAsStream("/eggicon.png")));
 			alert.showAndWait();
 			return true;
 		} else {
@@ -222,14 +222,14 @@ public class Grid extends GridPane {
 		Pane p = new StackPane();
 		this.add(p, 0, 0, width, width);
 		for(int i=0; i<60; i++) {
-			Image image = new Image("file:eggicon.png", 40, 40, false, false);
+			Image image = new Image(this.getClass().getResourceAsStream("/eggicon.png"), 40, 40, false, false);
 			ImageView iv = new ImageView(image);
 			iv.setTranslateX(r.nextDouble()*this.getWidth()-this.getWidth()*0.5);
 			iv.setTranslateY(r.nextDouble()*this.getHeight()-this.getHeight()*0.5);
 			p.getChildren().add(iv);
 		}
 		for(int i=0; i<30; i++) {
-			Image image = new Image("file:eggtime.png", 40, 40, false, false);
+			Image image = new Image(this.getClass().getResourceAsStream("/eggtime.png"), 40, 40, false, false);
 			ImageView iv = new ImageView(image);
 			iv.setTranslateX(r.nextDouble()*this.getWidth()-this.getWidth()*0.5);
 			iv.setTranslateY(r.nextDouble()*this.getHeight()-this.getHeight()*0.5);
@@ -446,10 +446,10 @@ public class Grid extends GridPane {
 		alert.setTitle("Auto-solved");
 		alert.setHeaderText("This puzzle has been automatically solved for you");
 		alert.setContentText("I'm disappointed :(");
-		Image image = new Image("file:crackedeggicon.png",80,80,false,false);
+		Image image = new Image(this.getClass().getResourceAsStream("/crackedeggicon.png"),80,80,false,false);
 		ImageView imageView = new ImageView(image);
 		alert.setGraphic(imageView);
-		((Stage)alert.getDialogPane().getScene().getWindow()).getIcons().add(new Image("file:eggicon.png"));
+		((Stage)alert.getDialogPane().getScene().getWindow()).getIcons().add(new Image(this.getClass().getResourceAsStream("/eggicon.png")));
 		alert.showAndWait();
 	}
 	

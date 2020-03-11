@@ -170,7 +170,7 @@ public class Cell extends StackPane {
 	    r.setPercentHeight(100.0/4.0);
 	    g.getRowConstraints().add(r);
         chooser.setTitle("Entering value at (" + Integer.toString(xCo) + "," + Integer.toString(yCo) + ")");
-        chooser.getIcons().add(new Image("file:eggicon.png"));
+        chooser.getIcons().add(new Image(this.getClass().getResourceAsStream("/eggicon.png")));
         chooser.setScene(new Scene(g, 210, 275));
         chooser.show();
 	}
