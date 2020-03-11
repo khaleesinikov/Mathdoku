@@ -1,3 +1,4 @@
+import javafx.animation.PauseTransition;
 import javafx.event.EventHandler;
 import javafx.geometry.*;
 import javafx.scene.Scene;
@@ -8,8 +9,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class Cell extends StackPane {
 	
@@ -17,6 +20,7 @@ public class Cell extends StackPane {
 	private int xCo;
 	private int yCo;
 	private int input;
+	private int answer;
 	private Label l = null;
 	private Grid board;
 	private Game manager;
@@ -55,6 +59,7 @@ public class Cell extends StackPane {
 			manager.m21.setDisable(false);
 			board.redo.clear();
 			manager.m22.setDisable(true);
+			manager.m23.setDisable(false);
 			this.input = num;
 		} else if(num == 9 && this.getChildren().contains(l)) {
 			getChildren().remove(l);
@@ -105,8 +110,8 @@ public class Cell extends StackPane {
 		    RowConstraints r = new RowConstraints();
 		    r.setPercentHeight(100.0/4.0);
 		    g.getRowConstraints().add(r);
-		    g.setHgap(10); //horizontal gap in pixels => that's what you are asking for
-		    g.setVgap(10); //vertical gap in pixels
+		    g.setHgap(10);
+		    g.setVgap(10);
 		    g.setPadding(new Insets(10));
         }
         TextField tf = new TextField();
@@ -180,7 +185,31 @@ public class Cell extends StackPane {
 			l.setFont(font);
 			StackPane.setAlignment(l, Pos.CENTER);
 			this.getChildren().add(l);
+		} else if(board.isMouseTransparent()) {
+			this.l = new Label(Integer.toString(answer));
+			l.setFont(font);
+			StackPane.setAlignment(l, Pos.CENTER);
+			this.getChildren().add(l);
 		}
+	}
+	
+	public void showHint() {
+		manager.m42.setDisable(true);
+		this.l = new Label(Integer.toString(answer));
+		l.setTextFill(Color.DARKRED);
+		l.setFont(Font.font("System Regular", FontWeight.BOLD, manager.fontSize));
+		StackPane.setAlignment(l, Pos.CENTER);
+		this.getChildren().add(l);
+		PauseTransition visiblePause = new PauseTransition(
+		        Duration.seconds(3)
+		);
+		visiblePause.setOnFinished(
+		        event -> {
+		        	this.getChildren().remove(l);
+		        	manager.m42.setDisable(false);
+		        }
+		);
+		visiblePause.play();
 	}
 	
 	public void clear() {
@@ -248,6 +277,14 @@ public class Cell extends StackPane {
 		Label omelette = new Label(Integer.toString(xCo) + "," + Integer.toString(yCo));
 		StackPane.setAlignment(omelette, Pos.BOTTOM_RIGHT);
 		getChildren().add(omelette);
+	}
+
+	public int getAnswer() {
+		return answer;
+	}
+
+	public void setAnswer(int answer) {
+		this.answer = answer;
 	}
 	
 }

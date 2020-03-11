@@ -1,4 +1,5 @@
 import java.io.File;
+import java.util.Date;
 import java.util.Optional;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -27,8 +28,8 @@ public class Game extends Application {
 	String[] hard = {"1- 1,9", "3+ 2,3", "21+ 4,5,13", "7+ 6,14", "11+ 7,15", "6+ 8,16", "10+ 10,11", "3+ 12,20", "1- 17,18", "11+ 19,27,35", "4+ 21,29", "12+ 22,30", "7- 23,31", "1- 24,32", "10+ 25,26", "3- 28,36", "1- 33,34", "15+ 37,38,45", "3 39", "7- 40,48" ,"6+ 41,42", "5- 43,51", "2- 44,52", "15+ 46,47", "7- 49,57", "2- 50,58", "5 59", "9+ 60,61,62", "10+ 53,54", "5- 55,56", "7+ 63,64"};
 	String[] puzzle;
 	Grid board;
-	MenuItem m21, m22;
-	CheckMenuItem m24;
+	MenuItem m21, m22, m23, m42, m43;
+	CheckMenuItem m41;
 	VBox vb;
 	Stage s, newWindow;
 	TextArea ta;
@@ -88,18 +89,29 @@ public class Game extends Application {
 	        System.exit(0);
 		}
 		
+		Solver solver = new Solver(board);
+		Date start = new Date();
+		if(solver.solve(1)) {
+			System.out.println("Solution found");
+			Date end = new Date();
+			System.out.println("Solver took " + (end.getTime()-start.getTime()) + " milliseconds to find solution.");
+		} else
+			System.out.println("WARNING: puzzle can't be solved");
+		solver.clean();
+		
 		MenuBar mb = new MenuBar();
 		Menu m1 = new Menu("Load");
 		Menu m2 = new Menu("Edit");
 		Menu m3 = new Menu("Text Size");
+		Menu m4 = new Menu("Tools");
 		MenuItem m11 = new MenuItem("Load from file...");
 		MenuItem m12 = new MenuItem("Load from text...");
 		m21 = new MenuItem("Undo");
 		m21.setDisable(true);
 		m22 = new MenuItem("Redo");
 		m22.setDisable(true);
-		MenuItem m23 = new MenuItem("Clear");
-		m24 = new CheckMenuItem("Show errors");
+		m23 = new MenuItem("Clear");
+		m41 = new CheckMenuItem("Show errors");
 		ToggleGroup tg = new ToggleGroup();
 		RadioMenuItem m31 = new RadioMenuItem("Small");
 		m31.setToggleGroup(tg);
@@ -108,10 +120,13 @@ public class Game extends Application {
 		m32.setToggleGroup(tg);
 		RadioMenuItem m33 = new RadioMenuItem("Large");
 		m33.setToggleGroup(tg);
-		mb.getMenus().addAll(m1,m2,m3);
+		m42 = new MenuItem("Hint");
+		m43 = new MenuItem("Show solution");
+		mb.getMenus().addAll(m1,m2,m3,m4);
 		m1.getItems().addAll(m11,m12);
-		m2.getItems().addAll(m21,m22,m23,m24);
+		m2.getItems().addAll(m21,m22,m23);
 		m3.getItems().addAll(m31,m32,m33);
+		m4.getItems().addAll(m41,m42,m43);
 		vb = new VBox(mb, board);
 		VBox.setVgrow(board, Priority.ALWAYS);
 		
@@ -184,7 +199,7 @@ public class Game extends Application {
 			}
 		});
 		
-		m24.setOnAction(new EventHandler<ActionEvent>() {
+		m41.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
 				Boolean b = board.getMist();
 				board.setMist(!b);
@@ -223,6 +238,19 @@ public class Game extends Application {
 			}
 		});
 		
+		m42.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				board.hint();
+			}
+		});
+		
+		m43.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				board.autoSolve();
+				m43.setDisable(true);
+			}
+		});
+		
 		s.setMinHeight(300);
 		s.setMinWidth(300);
 		s.minHeightProperty().bind(s.widthProperty());
@@ -245,7 +273,7 @@ public class Game extends Application {
 			FileParser f = new FileParser(file);
 			f.makeArray();
 			f.fillArray();
-			m24.setSelected(false);
+			m41.setSelected(false);
 			if(f.checkIfValid()) {
 				puzzle = f.getArray();
 				try { 
@@ -261,8 +289,20 @@ public class Game extends Application {
 				loadFromFile();
 			}
 		}
+		Solver solver = new Solver(board);
+		Date start = new Date();
+		if(solver.solve(1)) {
+			System.out.println("Solution found");
+			Date end = new Date();
+			System.out.println("Solver took " + (end.getTime()-start.getTime()) + " milliseconds to find solution.");
+		} else
+			System.out.println("WARNING: puzzle can't be solved");
+		solver.clean();
 		m21.setDisable(true);
 		m22.setDisable(true);
+		m23.setDisable(true);
+		m41.setDisable(false);
+		m43.setDisable(false);
 	}
 	
 	public void loadFromText() {
@@ -298,7 +338,7 @@ public class Game extends Application {
 		String text = ta.getText();
         TextParser tp = new TextParser(text);
         vb.getChildren().remove(board);
-        m24.setSelected(false);
+        m41.setSelected(false);
         if(tp.checkIfValid()) {
 	        puzzle = tp.getPuzzle();
 	        try {
@@ -312,8 +352,20 @@ public class Game extends Application {
         } else {
         	configFailAlert();
         }
+        Solver solver = new Solver(board);
+		Date start = new Date();
+		if(solver.solve(1)) {
+			System.out.println("Solution found");
+			Date end = new Date();
+			System.out.println("Solver took " + (end.getTime()-start.getTime()) + " milliseconds to find solution.");
+		} else
+			System.out.println("WARNING: puzzle can't be solved");
+		solver.clean();
         m21.setDisable(true);
 		m22.setDisable(true);
+		m23.setDisable(true);
+		m41.setDisable(false);
+		m43.setDisable(false);
 	}
 	
 	public void configFailAlert() {

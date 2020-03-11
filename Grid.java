@@ -74,6 +74,7 @@ public class Grid extends GridPane {
 		for(Cage cage : cageList) {
 			cage.borderTime();
 		}
+		
 	}
 	
 	public void makeCages(String[] puzzle) {
@@ -353,11 +354,7 @@ public class Grid extends GridPane {
 		for(Cage cage : cageList) {
 			ArrayList<Integer> checker = new ArrayList<>();
 			for(Cell c : cage.getCells()) {
-				if(checker.contains(c.getInput())) {
-					for(Cell d : cage.getCells()) {
-						d.setBackground(bad);
-					}
-				} else if(c.getInput() != 0) {
+				if(c.getInput() != 0) {
 					checker.add(c.getInput());
 				}
 			}
@@ -417,6 +414,43 @@ public class Grid extends GridPane {
 		} else {
 			c.setLabel(h.value);
 		}
+	}
+	
+	public void hint() {
+		Random ran = new Random();
+		ArrayList<Cell> potentialCells = new ArrayList<>();
+		for(Cell c : cellArray) {
+			if(c.getInput() == 0) {
+				potentialCells.add(c);
+			}
+		}
+		int cellID = ran.nextInt(potentialCells.size());
+		Cell hintCell = hash.get(cellID);
+		hintCell.showHint();
+	}
+	
+	public void autoSolve() {
+		Background auto = new Background(new BackgroundFill(Color.ALICEBLUE, CornerRadii.EMPTY, Insets.EMPTY));
+		for(Cell c : cellArray) {
+			c.clear();
+			c.setLabel(c.getAnswer());
+			c.setBackground(auto);
+		}
+		for(Cage cage : cageList) {
+			cage.autoBorders();
+		}
+		setMouseTransparent(true);
+		manager.m23.setDisable(true);
+		manager.m41.setDisable(true);
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("Auto-solved");
+		alert.setHeaderText("This puzzle has been automatically solved for you");
+		alert.setContentText("I'm disappointed :(");
+		Image image = new Image("file:crackedeggicon.png",80,80,false,false);
+		ImageView imageView = new ImageView(image);
+		alert.setGraphic(imageView);
+		((Stage)alert.getDialogPane().getScene().getWindow()).getIcons().add(new Image("file:eggicon.png"));
+		alert.showAndWait();
 	}
 	
 	public ArrayList<Cage> getCages() {
