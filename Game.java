@@ -42,6 +42,10 @@ public class Game extends Application {
 	public void start(Stage s) {
 		this.s = s;
 		
+		Generator gen = new Generator(5);
+		gen.printBoard();
+		gen.printCages();
+		
 		Stage intro = new Stage();
 		intro.initModality(Modality.APPLICATION_MODAL);
 		Label diffLabel = new Label("Select starting puzzle:");
