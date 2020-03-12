@@ -15,23 +15,22 @@ public class Solver {
 			values.add(i);
 	}
 	
-	public boolean solve(int index) {
+	public int solve(int index, int count) {
 		//System.out.println("Index: " + index);
 		
 		if(index > board.cellArray.size())
-			return true;
+			return 1+count;
 		
 		for(Integer v : values) {
 			//System.out.println("Value: " + v);
 			board.getHash().get(index).setInput(v);
-			if(checkCols(board.getHash().get(index).getY()) && checkRows(board.getHash().get(index).getX()) && checkCages(index)) {
-				if(solve(index+1))
-					return true;
+			if(checkCols(board.getHash().get(index).getY()) && checkRows(board.getHash().get(index).getX()) && checkCages(index) && count < 2) {
+				count = solve(index+1, count);
 			}
 		}
 	//System.out.println("bad");
 	board.getHash().get(index).setInput(0);
-	return false;
+	return count;
 	}
 	
 	public boolean checkCols(int column) {

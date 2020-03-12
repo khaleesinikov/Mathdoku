@@ -7,9 +7,10 @@ public class Generator {
 	
 	private int width;
 	private Random ran;
-	private ArrayList<ArrayList<Integer>> boardMatrix;
-	private ArrayList<ArrayList<Integer>> cages;
-	private HashMap<Integer, Integer> boardMap;
+	private ArrayList<ArrayList<Integer>> boardMatrix; //each array is a row of the board
+	private ArrayList<ArrayList<Integer>> cages; //each array is the cell id of a cage
+	private HashMap<Integer, Integer> boardMap; //key is cell id, value is number generated
+	private ArrayList<String> operationList; //key is string of cell ids, value is target and operator
 
 	public Generator(int size) {
 		this.width = size;
@@ -40,7 +41,7 @@ public class Generator {
 		
 		for(int row = 0; row<width; row++) {
 			for(int col = 0; col<width; col++) {
-				boardMap.put(row*width+col, boardMatrix.get(row).get(col));
+				boardMap.put(row*width+col + 1, boardMatrix.get(row).get(col));
 			}
 		}
 		
@@ -111,14 +112,89 @@ public class Generator {
 			potCells.clear();
 		}
 		
-		//To-do list:
-		//Assign operators to cages
-		//Somehow map operators to cages so you can recall them
-		//Calculate end goals for cages while I'm at it
-		//Modify text parser so I can be lazy and load it that way maybe
-		//Either way load the grid somehow
-		//Check for multi solution grids
+		operationList = new ArrayList<>();
 		
+		for(ArrayList<Integer> cage : cages) {
+			StringBuilder strBld = new StringBuilder();
+			for(int i = 0; i<cage.size(); i++) {
+				strBld.append(cage.get(i));
+				strBld.append(",");
+			}
+			strBld.setLength(strBld.length()-1);
+			
+			ArrayList<Integer> numbers = new ArrayList<>();
+			for(Integer cellID : cage) {
+				numbers.add(boardMap.get(cellID));
+			}
+			
+			if(cage.size() == 1) {
+				strBld.insert(0, " ");
+				strBld.insert(0, numbers.get(0));
+				String finished = strBld.toString();
+				operationList.add(finished);
+				continue;
+			}
+			
+			Collections.sort(numbers);
+			Collections.reverse(numbers);
+			
+			String operator;
+			Integer div = numbers.get(0);
+			boolean divFlag = true;
+			Integer sub = numbers.get(0);
+			boolean subFlag = true;
+			Integer add = numbers.get(0);
+			Integer mul = numbers.get(0);
+			for(int i = 1; i<numbers.size(); i++) {
+				if(!(div % numbers.get(i) == 0))
+					divFlag = false;
+				else if(divFlag)
+					div = div/numbers.get(i);
+				sub = sub-numbers.get(i);
+				add = add+numbers.get(i);
+				mul = mul*numbers.get(i);
+			}
+			if(sub<1)
+				subFlag = false;
+			
+			Integer target;
+			if(divFlag && ran.nextDouble()>0.4) {
+				operator = "÷";
+				target = div;
+			} else if(subFlag && ran.nextDouble()>0.6) {
+				operator = "-";
+				target = sub;
+			} else if(ran.nextDouble()>0.5) {
+				operator = "+";
+				target = add;
+			} else {
+				operator = "x";
+				target = mul;
+			}
+			
+			strBld.insert(0, " ");
+			strBld.insert(0, operator);
+			strBld.insert(0, target);
+			
+			String finished = strBld.toString();
+			operationList.add(finished);
+			
+		}
+		
+		/*for(String s : operationList) {
+			System.out.println(s);
+		}*/
+		
+	}
+	
+	public String sendToParse() {
+		StringBuilder strBld = new StringBuilder();
+		for(String s : operationList) {
+			strBld.append(s);
+			strBld.append("\n");
+		}
+		String readyToParse = strBld.toString();
+		return readyToParse;
 	}
 	
 	public void printBoard() {
