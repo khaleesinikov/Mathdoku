@@ -195,17 +195,17 @@ public class Cell extends StackPane {
 	
 	public void showHint() {
 		manager.m42.setDisable(true);
-		this.l = new Label(Integer.toString(answer));
-		l.setTextFill(Color.DARKRED);
-		l.setFont(Font.font("System Regular", FontWeight.BOLD, manager.fontSize));
-		StackPane.setAlignment(l, Pos.CENTER);
-		this.getChildren().add(l);
+		Label hint = new Label(Integer.toString(answer));
+		hint.setTextFill(Color.DARKRED);
+		hint.setFont(Font.font("System Regular", FontWeight.BOLD, manager.fontSize));
+		StackPane.setAlignment(hint, Pos.CENTER);
+		this.getChildren().add(hint);
 		PauseTransition visiblePause = new PauseTransition(
 		        Duration.seconds(3)
 		);
 		visiblePause.setOnFinished(
 		        event -> {
-		        	this.getChildren().remove(l);
+		        	this.getChildren().remove(hint);
 		        	manager.m42.setDisable(false);
 		        }
 		);

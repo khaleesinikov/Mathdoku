@@ -93,6 +93,7 @@ public class Game extends Application {
 		Solver solver = new Solver(board);
 		Date start = new Date();
 		if(solver.solve(1,0) == 1) {
+			solver.solve(1);
 			System.out.println("Solution found");
 			Date end = new Date();
 			System.out.println("Solver took " + (end.getTime()-start.getTime()) + " milliseconds to find solution.");
@@ -278,6 +279,9 @@ public class Game extends Application {
 		ExtensionFilter txtFilter = new ExtensionFilter("Text files", "*.txt");
 		fileChooser.getExtensionFilters().add(txtFilter);
 		File file = fileChooser.showOpenDialog(s);
+		if(file == null) {
+			return;
+		}
 		if(file != null) {
 			vb.getChildren().remove(board);
 			FileParser f = new FileParser(file);
@@ -303,6 +307,7 @@ public class Game extends Application {
 		Date start = new Date();
 		int solverResult = solver.solve(1, 0);
 		if(solverResult == 1) {
+			solver.solve(1);
 			System.out.println("Unique solution found");
 			Date end = new Date();
 			System.out.println("Solver took " + (end.getTime()-start.getTime()) + " milliseconds to find solution.");
@@ -411,6 +416,7 @@ public class Game extends Application {
 		Date start = new Date();
 		int solverResult = solver.solve(1, 0);
 		if(solverResult == 1) {
+			solver.solve(1);
 			System.out.println("Unique solution found");
 			Date end = new Date();
 			System.out.println("Solver took " + (end.getTime()-start.getTime()) + " milliseconds to find solution.");

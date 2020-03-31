@@ -18,8 +18,9 @@ public class Solver {
 	public int solve(int index, int count) {
 		//System.out.println("Index: " + index);
 		
-		if(index > board.cellArray.size())
+		if(index > board.cellArray.size()) {
 			return 1+count;
+		}
 		
 		for(Integer v : values) {
 			//System.out.println("Value: " + v);
@@ -31,6 +32,23 @@ public class Solver {
 	//System.out.println("bad");
 	board.getHash().get(index).setInput(0);
 	return count;
+	}
+	
+	//old solve method, currently unused
+	public boolean solve(int index) {
+		if(index > board.cellArray.size())
+			return true;
+
+		for(Integer v : values) {
+			//System.out.println("Value: " + v);
+			board.getHash().get(index).setInput(v);
+			if(checkCols(board.getHash().get(index).getY()) && checkRows(board.getHash().get(index).getX()) && checkCages(index)) {
+				if(solve(index+1))
+					return true;
+			}
+		}
+	board.getHash().get(index).setInput(0);
+	return false;
 	}
 	
 	public boolean checkCols(int column) {
