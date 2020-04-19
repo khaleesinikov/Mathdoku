@@ -17,7 +17,7 @@ public class TextParser {
 			String[] test = str.split(",");
 			counter += test.length;
 		}
-		if(Math.floor(Math.sqrt(counter)) == Math.sqrt(counter) && checkIfLine() && checkIfAdj() && checkIfNumber() && checkIfOp()) {
+		if(Math.floor(Math.sqrt(counter)) == Math.sqrt(counter) && checkIfLine() && checkIfAdj() && checkIfNumber() && checkIfOp() && checkIfSolo()) {
 			return true;
 		} else
 			return false;
@@ -83,7 +83,7 @@ public class TextParser {
 	}
 	
 	public boolean checkIfOp() {
-		ArrayList<String> operators = new ArrayList<>(Arrays.asList("+", "x", "*", "/", "÷", "-", " ", "1", "2", "3", "4", "5", "6", "7", "8"));
+		ArrayList<String> operators = new ArrayList<>(Arrays.asList("+", "x", "*", "/", "÷", "\u00F7", "-", " ", "1", "2", "3", "4", "5", "6", "7", "8"));
 		String[] test = null;
 		for(String str : puzzle) {
 			test = str.split(" ");
@@ -91,6 +91,17 @@ public class TextParser {
 			toCheck = String.valueOf(toCheck.charAt(toCheck.length() - 1));
 			if(!operators.contains(toCheck))
 				//System.out.println("Failed");
+				return false;
+		}
+		return true;
+	}
+	
+	public boolean checkIfSolo() {
+		String[] test = null;
+		for(String str : puzzle) {
+			test = str.split(" ");
+			String[] test2 = test[1].split(",");
+			if(test[0].length() == 1 && test2.length > 1)
 				return false;
 		}
 		return true;

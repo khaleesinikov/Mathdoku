@@ -29,9 +29,9 @@ public class Solver {
 				count = solve(index+1, count);
 			}
 		}
-	//System.out.println("bad");
-	board.getHash().get(index).setInput(0);
-	return count;
+		//System.out.println("bad");
+		board.getHash().get(index).setInput(0);
+		return count;
 	}
 	
 	//old solve method, currently unused

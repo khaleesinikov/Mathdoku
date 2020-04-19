@@ -88,7 +88,7 @@ public class FileParser {
 			String[] test = str.split(",");
 			counter += test.length;
 		}
-		if(Math.floor(Math.sqrt(counter)) == Math.sqrt(counter) && checkIfLine() && checkIfAdj() && checkIfNumber() && checkIfOp()) {
+		if(Math.floor(Math.sqrt(counter)) == Math.sqrt(counter) && checkIfLine() && checkIfAdj() && checkIfNumber() && checkIfOp() && checkIfSolo()) {
 			return true;
 		} else
 			return false;
@@ -163,6 +163,17 @@ public class FileParser {
 			toCheck = String.valueOf(toCheck.charAt(toCheck.length() - 1));
 			//System.out.println(toCheck);
 			if(!operators.contains(toCheck))
+				return false;
+		}
+		return true;
+	}
+	
+	public boolean checkIfSolo() {
+		String[] test = null;
+		for(String str : puzzle) {
+			test = str.split(" ");
+			String[] test2 = test[1].split(",");
+			if(test[0].length() == 1 && test2.length > 1)
 				return false;
 		}
 		return true;

@@ -297,10 +297,12 @@ public class Game extends Application {
 				} catch(Exception ee) {
 					configFailAlert();
 					loadFromFile();
+					return;
 				}
 			} else {
 				configFailAlert();
 				loadFromFile();
+				return;
 			}
 		}
 		Solver solver = new Solver(board);
@@ -316,7 +318,7 @@ public class Game extends Application {
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.setTitle("Bad puzzle");
 			alert.setHeaderText("WARNING: puzzle has multiple solutions");
-			alert.setContentText("Continue anyway?");
+			alert.setContentText("Hint and auto-solve will be disabled. Continue anyway?");
 			ButtonType no = new ButtonType("No");
 			ButtonType yes = new ButtonType("Yes");
 			alert.getButtonTypes().setAll(no, yes);
@@ -324,9 +326,13 @@ public class Game extends Application {
 			if(result.get() == no) {
 				vb.getChildren().remove(board);
 				loadFromFile();
+				return;
 			} else {
 				try {
 		        	newWindow.close();
+		        	m42.setDisable(true);
+		    		m43.setDisable(true);
+		    		return;
 		        } catch(NullPointerException npe) {
 		        	
 		        }
@@ -336,7 +342,7 @@ public class Game extends Application {
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.setTitle("Unsolvable puzzle");
 			alert.setHeaderText("WARNING: puzzle can't be solved");
-			alert.setContentText("Continue anyway?");
+			alert.setContentText("Hint and auto-solve will be disabled. Continue anyway?");
 			ButtonType no = new ButtonType("No");
 			ButtonType yes = new ButtonType("Yes");
 			alert.getButtonTypes().setAll(no, yes);
@@ -344,9 +350,13 @@ public class Game extends Application {
 			if(result.get() == no) {
 				vb.getChildren().remove(board);
 				loadFromFile();
+				return;
 			} else {
 				try {
 		        	newWindow.close();
+		        	m42.setDisable(true);
+		    		m43.setDisable(true);
+		    		return;
 		        } catch(NullPointerException npe) {
 		        	
 		        }
@@ -358,6 +368,7 @@ public class Game extends Application {
 		m22.setDisable(true);
 		m23.setDisable(true);
 		m41.setDisable(false);
+		m42.setDisable(false);
 		m43.setDisable(false);
 	}
 	
@@ -403,6 +414,7 @@ public class Game extends Application {
 				VBox.setVgrow(board, Priority.ALWAYS);
 	        } catch(Exception ee) {
 	        	configFailAlert();
+	        	return;
 	        }
 	        try {
 	        	newWindow.close();
@@ -411,6 +423,7 @@ public class Game extends Application {
 	        }
         } else {
         	configFailAlert();
+        	return;
         }
         Solver solver = new Solver(board);
 		Date start = new Date();
@@ -430,7 +443,7 @@ public class Game extends Application {
 				Alert alert = new Alert(AlertType.WARNING);
 				alert.setTitle("Bad puzzle");
 				alert.setHeaderText("WARNING: puzzle has multiple solutions");
-				alert.setContentText("Continue anyway?");
+				alert.setContentText("Hint and auto-solve will be disabled. Continue anyway?");
 				ButtonType no = new ButtonType("No");
 				ButtonType yes = new ButtonType("Yes");
 				alert.getButtonTypes().setAll(no, yes);
@@ -439,6 +452,7 @@ public class Game extends Application {
 					vb.getChildren().remove(board);
 					if(source == 0) {
 						loadFromText();
+						return;
 					} else {
 						genWindow.close();
 						generateNew();
@@ -446,6 +460,9 @@ public class Game extends Application {
 				} else {
 					try {
 			        	newWindow.close();
+			        	m42.setDisable(true);
+			    		m43.setDisable(true);
+			    		return;
 			        } catch(NullPointerException npe) {
 			        	
 			        }
@@ -456,7 +473,7 @@ public class Game extends Application {
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.setTitle("Unsolvable puzzle");
 			alert.setHeaderText("WARNING: puzzle can't be solved");
-			alert.setContentText("Continue anyway?");
+			alert.setContentText("Hint and auto-solve will be disabled. Continue anyway?");
 			ButtonType no = new ButtonType("No");
 			ButtonType yes = new ButtonType("Yes");
 			alert.getButtonTypes().setAll(no, yes);
@@ -465,6 +482,7 @@ public class Game extends Application {
 				vb.getChildren().remove(board);
 				if(source == 0) {
 					loadFromText();
+					return;
 				} else {
 					genWindow.close();
 					generateNew();
@@ -472,6 +490,9 @@ public class Game extends Application {
 			} else {
 				try {
 		        	newWindow.close();
+		        	m42.setDisable(true);
+		    		m43.setDisable(true);
+		    		return;
 		        } catch(NullPointerException npe) {
 		        	
 		        }
@@ -483,10 +504,14 @@ public class Game extends Application {
 		m22.setDisable(true);
 		m23.setDisable(true);
 		m41.setDisable(false);
+		m42.setDisable(false);
 		m43.setDisable(false);
 	}
 	
 	public void configFailAlert() {
+		m41.setDisable(true);
+		m42.setDisable(true);
+		m43.setDisable(true);
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Config Failed");
 		alert.setHeaderText("Your config is bad and you should feel bad");
