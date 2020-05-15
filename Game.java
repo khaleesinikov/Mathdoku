@@ -258,6 +258,9 @@ public class Game extends Application {
 		m43.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
 				board.autoSolve();
+				m21.setDisable(true);
+				m22.setDisable(true);
+				m42.setDisable(true);
 				m43.setDisable(true);
 			}
 		});

@@ -74,7 +74,6 @@ public class Grid extends GridPane {
 		for(Cage cage : cageList) {
 			cage.borderTime();
 		}
-		
 	}
 	
 	public void makeCages(String[] puzzle) {
